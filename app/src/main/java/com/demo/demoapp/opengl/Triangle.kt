@@ -1,6 +1,7 @@
 package com.demo.demoapp.opengl
 
 import android.opengl.GLES20
+import android.opengl.Matrix
 import android.util.Log
 import java.nio.FloatBuffer
 
@@ -17,9 +18,9 @@ class Triangle {
     private val COORDS_PER_VERTEX = 3
     private val color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 1.0f)
     private var triangleCoords = floatArrayOf(
-            0f, 0.8f, 0.0f, // top
-            -0.8f, 0f, 0.0f, // bottom left
-            0.8f, 0f, 0.0f // bottom right
+            0f, 0.5f, 0.0f, // top
+            -0.5f, -0.5f, 0.0f, // bottom left
+            0.5f, -0.5f, 0.0f // bottom right
     )
 
     init {
@@ -38,8 +39,12 @@ class Triangle {
         Log.d(TAG, "initEnd time ${System.currentTimeMillis() - startTime}")
     }
 
-    fun draw() {
+    fun draw(matrix: FloatArray) {
+//        Matrix.setIdentityM(matrix, 0)
         GLES20.glUseProgram(mProgramId)
+        val matrixHandle = GLES20.glGetUniformLocation(mProgramId, "uMVPMatrix")
+        GLES20.glUniformMatrix4fv(matrixHandle, 1, false, matrix, 0)
+        OpenGLUtil.checkGlError("glUniformMatrix4fv")
         val positionHandle = GLES20.glGetAttribLocation(mProgramId, "vPosition")
         GLES20.glEnableVertexAttribArray(positionHandle)
         GLES20.glVertexAttribPointer(positionHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT,

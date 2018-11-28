@@ -3,6 +3,7 @@ package com.demo.demoapp.opengl
 import android.app.Activity
 import android.opengl.GLSurfaceView
 import android.os.Bundle
+import kotlin.concurrent.thread
 
 class GLActivity : Activity() {
     private lateinit var mainView: GLSurfaceView
@@ -10,6 +11,13 @@ class GLActivity : Activity() {
         super.onCreate(savedInstanceState)
         mainView = MyGLSurfaceView(this)
         setContentView(mainView)
+        thread {
+            while (true) {
+                Thread.sleep(30)
+                mainView.requestRender()
+            }
+
+        }
     }
 
     override fun onResume() {
